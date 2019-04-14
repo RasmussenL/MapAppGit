@@ -48,6 +48,13 @@ export class HomePage implements OnInit {
       }
     });
   }
+  onContextChange(ctxt: string): void {
+    this.locationsList$ = this.firebaseService.getLocationsList().snapshotChanges().map(changes => {
+      return changes.map( c=> ({
+        key: c.payload.key, ...c.payload.val()
+      }));
+    });
+  }
 addMarker(location: any){
   let latLng = new google.maps.LatLng(location.latitude, location.longitude);
   let marker = new google.maps.Marker({
@@ -58,30 +65,40 @@ addMarker(location: any){
 
   this.addInfoWindow(marker, location);
 }
-addInfoWindow(marker, location) {
+assignLocation(loc: Location){
+  this.firebaseService.setCurrentLocation(loc);
+  this.currentLoc = loc;
+  this.locationKey = loc.key;
+  this.locationTitle = loc.title;
+  console.log("Assigned location key: " + this.locationKey);
+}
+addInfoWindow(marker, location){
+  let contentString = '<div class="info-window" id="clickableItem" >' +
+     '<h3>' + location.title + '</h3>' +
+     '<div class="info-content">' +
+     '<img src="' + location.picture + '" style="width:30px;height:30px;border-radius: 50%; padding: 20px, 20px, 20px, 20px;"/>' +
+     '<p>' + location.content + '</p>' +
+     '</div>' +
+     '</div>';
 
-    let contentString= '<div class="info-window" id="clickableItem" >' +
-      '<h3>' + location.title + '/<h3>' +
-      '<div class="info-content">'+
-      '<img src="' + location.picture + '"style="width:30px; height:30px; padding: 20px, 20px, 20px, 20px;">' +
-      '<p>' + location.content + '</p>' +
-      '</div>' +
-      '</div>';
-
-      let infoWindow = new google.maps.InfoWindow({
-        content: contentString,
-        maxWidth: 400
-      });
+     let infoWindow = new google.maps.InfoWindow({
+       content: contentString,
+       maxWidth: 400
+     });
 
       google.maps.event.addListener(infoWindow, 'domready', () => {
         var clickableItem = document.getElementById('clickableItem');
         clickableItem.addEventListener('click', () => {
+          console.log("clicked on marker");
           this.firebaseService.setCurrentLocation(location);
           this.locationTitle = location.title;
           this.router.navigate(['/list', this.locationTitle]);
         });
       });
       google.maps.event.addListener(marker, 'click',() => {
+        infoWindow.open(this.map, marker);
+      });
+      google.maps.event.addListener(this.map, 'click', () =>{
         infoWindow.close(this.map, marker);
       });
 }

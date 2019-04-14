@@ -15,6 +15,9 @@ export class FirebaseService {
   setCurrentLocation(location: Location){
     this.currentLocation = location;
   }
+  getCurrentLocation(){
+    return this.currentLocation;
+  }
   getLocationsList(){
     return this.locationListRef;
   }

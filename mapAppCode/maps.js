@@ -4,15 +4,7 @@ var initialPos = {
     lat: -30.0,
     lng: 40.0
 }
-function initMap(){
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: initialPos,
-        zoom: 1,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    });
-    infoWindow = new google.maps.InfoWindow;
-    updateLocations();
-}
+
 function updateLocations(){
     var arrayLength = locationsDataArray.length;
     var pos;
@@ -22,6 +14,16 @@ function updateLocations(){
         map.setZoom(4);
     }
 }
+function initMap(){
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: initialPos,
+        zoom: 1,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+    infoWindow = new google.maps.InfoWindow;
+    updateLocations();
+}
+
 function addMarker(map, location){
     //location is an object with position, text, and picture
     var pos={
@@ -33,10 +35,10 @@ function addMarker(map, location){
         position: pos,
         map: map
     });
-    var contentString = '<div class="info-window" id="clickableItem" >' + 
-    '<h3>' + locattion.title + '/<h3>' +
+    var contentString = '<div class="info-window" id="clickableItem" >' +
+    '<h3>' + location.title + '/<h3>' +
     '<div class="info-content">'+
-    '<img src="' + location.picture + '" style="width:30px; height:30px; padding: 20px, 20px, 20px, 20px;">' +
+    '<img src="' + location.picture + '" style="width:30px; height:30px; padding: 20px, 20px, 20px, 20px;"/>' +
     '<p>' + location.content + '</p>' +
     '</div>' +
     '</div>';

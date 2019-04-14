@@ -11,8 +11,11 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./list.page.scss'],
 })
 export class ListPage implements OnInit {
-
+  public LocationKey: string;
+  public location: Location;
+  public base64Image: string;
   constructor(private activatedRoute: ActivatedRoute, private geolocation: Geolocation,
+    
   private camera: Camera, public firebaseService: FirebaseService) {
       this.location = this.firebaseService.getCurrentLocation();
    }
@@ -41,4 +44,5 @@ export class ListPage implements OnInit {
     }, (err) =>{
     });
 
+}
 }
